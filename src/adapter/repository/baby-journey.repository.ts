@@ -15,7 +15,7 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
   constructor(
     @InjectModel('BabyJourney')
     private babyJourneyModel: Model<BabyJourneyDocument>
-  ) {}
+  ) { }
 
   async createUser(user: UserEntity): Promise<BabyJourneyDocument> {
     try {

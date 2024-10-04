@@ -12,17 +12,14 @@ export class BabyJourneyService {
     private readonly babyJourneyRepository: BabyJourneyRepositoryInterface,
     @Inject(AzureBlobServiceInterface)
     private readonly blobService: AzureBlobServiceInterface
-  ) {}
+  ) { }
 
   async saveMilestone(
     id: string,
     milestone: RecordEntity,
     file: Express.Multer.File
   ): Promise<BabyJourneyDocument> {
-    const blobFileName = await this.blobService.uploadFile(
-      file,
-      process.env.AZURE_STORAGE_CONTAINER_NAME
-    );
+    const blobFileName = await this.blobService.uploadFile(file);
     milestone.image = blobFileName;
     const updatedUser = await this.babyJourneyRepository.saveMilestone(
       id,
@@ -36,10 +33,7 @@ export class BabyJourneyService {
     memory: RecordEntity,
     file: Express.Multer.File
   ): Promise<BabyJourneyDocument> {
-    const blobFileName = await this.blobService.uploadFile(
-      file,
-      process.env.AZURE_STORAGE_CONTAINER_NAME
-    );
+    const blobFileName = await this.blobService.uploadFile(file);
     memory.image = blobFileName;
     const updatedUser = await this.babyJourneyRepository.saveMemory(id, memory);
     return updatedUser;
@@ -53,10 +47,7 @@ export class BabyJourneyService {
       id,
       milestoneId
     );
-    await this.blobService.deleteFile(
-      milestone.image,
-      process.env.AZURE_STORAGE_CONTAINER_NAME
-    );
+    await this.blobService.deleteFile(milestone.image);
     const updatedUser = await this.babyJourneyRepository.deleteMilestone(
       id,
       milestoneId
@@ -72,10 +63,7 @@ export class BabyJourneyService {
       id,
       memoryId
     );
-    await this.blobService.deleteFile(
-      memory.image,
-      process.env.AZURE_STORAGE_CONTAINER_NAME
-    );
+    await this.blobService.deleteFile(memory.image);
     const updatedUser = await this.babyJourneyRepository.deleteMemory(
       id,
       memoryId

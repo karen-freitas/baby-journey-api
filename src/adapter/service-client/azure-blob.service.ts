@@ -2,19 +2,21 @@ import { BlobServiceClient, BlockBlobClient } from '@azure/storage-blob';
 import { Injectable } from '@nestjs/common';
 import { AzureBlobServiceInterface } from '../../domain/interface/azure-blob.service';
 import { v4 } from 'uuid';
+import { EnvironmentConfig } from '../../configs/environment.config';
 
 @Injectable()
 export class AzureBlobService implements AzureBlobServiceInterface {
-  containerName: string;
-  azureConnection = process.env.AZURE_STORAGE_CONNECTION_STRING;
+  constructor(
+    private readonly environmentConfig: EnvironmentConfig
+  ) { }
 
   private getBlobClient(imageName: string): BlockBlobClient {
     try {
       const blobClientService = BlobServiceClient.fromConnectionString(
-        this.azureConnection
+        this.environmentConfig.azureConnectionString
       );
       const containerClient = blobClientService.getContainerClient(
-        this.containerName
+        this.environmentConfig.azureContainerName
       );
       const blobClient = containerClient.getBlockBlobClient(imageName);
       return blobClient;
@@ -26,10 +28,8 @@ export class AzureBlobService implements AzureBlobServiceInterface {
 
   public async uploadFile(
     file: Express.Multer.File,
-    containerName: string
   ): Promise<string> {
     try {
-      this.containerName = containerName;
       const fileName = v4() + file.originalname;
       const blobClient = this.getBlobClient(fileName);
       await blobClient.uploadData(file.buffer);
@@ -42,10 +42,8 @@ export class AzureBlobService implements AzureBlobServiceInterface {
 
   public async deleteFile(
     filename: string,
-    containerName: string
   ): Promise<void> {
     try {
-      this.containerName = containerName;
       const blobClient = this.getBlobClient(filename);
       await blobClient.deleteIfExists();
     } catch (error) {

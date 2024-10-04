@@ -12,7 +12,7 @@ export class UsersService {
     private readonly babyJourneyRepository: BabyJourneyRepositoryInterface,
     @Inject(AzureBlobServiceInterface)
     private readonly blobService: AzureBlobServiceInterface
-  ) {}
+  ) { }
 
   async create(newUser: UserEntity): Promise<UserModel> {
     const userAlreadyRegistered = await this.findOne(newUser.email);
@@ -48,16 +48,10 @@ export class UsersService {
       throw new Error(`User with id '${id}' not found`);
     }
     user.milestones.forEach(async (milestone) => {
-      await this.blobService.deleteFile(
-        milestone.image,
-        process.env.AZURE_STORAGE_CONTAINER_NAME
-      );
+      await this.blobService.deleteFile(milestone.image);
     });
     user.memories.forEach(async (memory) => {
-      await this.blobService.deleteFile(
-        memory.image,
-        process.env.AZURE_STORAGE_CONTAINER_NAME
-      );
+      await this.blobService.deleteFile(memory.image);
     });
 
     return this.babyJourneyRepository.deleteUser(id);
