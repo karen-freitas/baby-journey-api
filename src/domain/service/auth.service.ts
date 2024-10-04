@@ -8,8 +8,8 @@ import { AuthResponseModel } from '../model/auth-response.model';
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
-    private readonly jwtService: JwtService,
-  ) { }
+    private readonly jwtService: JwtService
+  ) {}
 
   async signIn(email: string, password: string): Promise<AuthResponseModel> {
     const foundUser = await this.usersService.findOne(email);

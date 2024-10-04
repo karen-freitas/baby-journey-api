@@ -1,14 +1,21 @@
-import { Body, Controller, Delete, Param, Post, UseGuards } from "@nestjs/common";
-import { CreateUserDto } from "../dto/create-user.dto";
-import { UsersService } from "../../domain/service/user.service";
-import { plainToClass } from "class-transformer";
-import { UserEntity } from "../../domain/entity/user";
-import { AuthGuard } from "../guards/auth-guard";
-import { UserModel } from "../../domain/model/user.model";
+import {
+  Body,
+  Controller,
+  Delete,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
+import { CreateUserDto } from '../dto/create-user.dto';
+import { UsersService } from '../../domain/service/user.service';
+import { plainToClass } from 'class-transformer';
+import { UserEntity } from '../../domain/entity/user';
+import { AuthGuard } from '../guards/auth-guard';
+import { UserModel } from '../../domain/model/user.model';
 
 @Controller('users')
 export class UserController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService) {}
 
   @Post()
   createUser(@Body() createUserDto: CreateUserDto): Promise<UserModel> {

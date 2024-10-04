@@ -40,7 +40,7 @@ import { AzureBlobServiceInterface } from './domain/interface/azure-blob.service
     {
       provide: AzureBlobServiceInterface,
       useClass: AzureBlobService,
-    }
+    },
   ],
 })
-export class AppModule { }
+export class AppModule {}

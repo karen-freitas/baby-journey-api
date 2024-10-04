@@ -1,5 +1,5 @@
-import { RecordEntity } from "./record";
-import { UserEntity } from "./user";
+import { RecordEntity } from './record';
+import { UserEntity } from './user';
 
 export class BabyJourneyEntity extends UserEntity {
   milestones: RecordEntity[];

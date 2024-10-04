@@ -8,18 +8,17 @@ import { UserModel } from '../model/user.model';
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject(BabyJourneyRepositoryInterface) private readonly babyJourneyRepository: BabyJourneyRepositoryInterface,
-    @Inject(AzureBlobServiceInterface) private readonly blobService: AzureBlobServiceInterface
-
-  ) { }
+    @Inject(BabyJourneyRepositoryInterface)
+    private readonly babyJourneyRepository: BabyJourneyRepositoryInterface,
+    @Inject(AzureBlobServiceInterface)
+    private readonly blobService: AzureBlobServiceInterface
+  ) {}
 
   async create(newUser: UserEntity): Promise<UserModel> {
     const userAlreadyRegistered = await this.findOne(newUser.email);
 
     if (userAlreadyRegistered) {
-      throw new Error(
-        `User '${newUser.email}' already registered`,
-      );
+      throw new Error(`User '${newUser.email}' already registered`);
     }
     const passwordHash = bcryptHashSync(newUser.password, 10);
     const dbUser = { ...newUser, password: passwordHash };
@@ -49,10 +48,16 @@ export class UsersService {
       throw new Error(`User with id '${id}' not found`);
     }
     user.milestones.forEach(async (milestone) => {
-      await this.blobService.deleteFile(milestone.image, process.env.AZURE_STORAGE_CONTAINER_NAME);
+      await this.blobService.deleteFile(
+        milestone.image,
+        process.env.AZURE_STORAGE_CONTAINER_NAME
+      );
     });
     user.memories.forEach(async (memory) => {
-      await this.blobService.deleteFile(memory.image, process.env.AZURE_STORAGE_CONTAINER_NAME);
+      await this.blobService.deleteFile(
+        memory.image,
+        process.env.AZURE_STORAGE_CONTAINER_NAME
+      );
     });
 
     return this.babyJourneyRepository.deleteUser(id);

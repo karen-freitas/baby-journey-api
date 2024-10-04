@@ -4,4 +4,3 @@ export interface AzureBlobServiceInterface {
 }
 
 export const AzureBlobServiceInterface = Symbol('AzureBlobServiceInterface');
-

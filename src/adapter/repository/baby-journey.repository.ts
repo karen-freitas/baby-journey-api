@@ -1,4 +1,8 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { BabyJourneyDocument } from '../schemas/baby-journey.schema';
@@ -8,22 +12,33 @@ import { RecordEntity } from '../../domain/entity/record';
 
 @Injectable()
 export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
-  constructor(@InjectModel('BabyJourney') private babyJourneyModel: Model<BabyJourneyDocument>) { }
+  constructor(
+    @InjectModel('BabyJourney')
+    private babyJourneyModel: Model<BabyJourneyDocument>
+  ) {}
 
   async createUser(user: UserEntity): Promise<BabyJourneyDocument> {
     try {
       const createdUser = new this.babyJourneyModel(user);
       return await createdUser.save();
     } catch (error) {
-      throw new InternalServerErrorException('Failed to create user', error.message);
+      throw new InternalServerErrorException(
+        'Failed to create user',
+        error.message
+      );
     }
   }
 
-  async findUserByEmail(email: string): Promise<BabyJourneyDocument | undefined> {
+  async findUserByEmail(
+    email: string
+  ): Promise<BabyJourneyDocument | undefined> {
     try {
       return await this.babyJourneyModel.findOne({ email }).exec();
     } catch (error) {
-      throw new InternalServerErrorException('Failed to find user by email', error.message);
+      throw new InternalServerErrorException(
+        'Failed to find user by email',
+        error.message
+      );
     }
   }
 
@@ -35,7 +50,10 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
       }
       return user;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to find user by id', error.message);
+      throw new InternalServerErrorException(
+        'Failed to find user by id',
+        error.message
+      );
     }
   }
 
@@ -43,17 +61,24 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
     try {
       await this.babyJourneyModel.findByIdAndDelete(id).exec();
     } catch (error) {
-      throw new InternalServerErrorException('Failed to delete user', error.message);
+      throw new InternalServerErrorException(
+        'Failed to delete user',
+        error.message
+      );
     }
   }
 
-  async saveMilestone(id: string, milestone: RecordEntity): Promise<BabyJourneyDocument> {
+  async saveMilestone(
+    id: string,
+    milestone: RecordEntity
+  ): Promise<BabyJourneyDocument> {
     try {
-      const user = await this.babyJourneyModel.findByIdAndUpdate(
-        { _id: id },
-        { $push: { milestones: milestone } },
-        { new: true }
-      )
+      const user = await this.babyJourneyModel
+        .findByIdAndUpdate(
+          { _id: id },
+          { $push: { milestones: milestone } },
+          { new: true }
+        )
         .select('-password')
         .exec();
       if (!user) {
@@ -61,17 +86,20 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
       }
       return user;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to save milestone', error.message);
+      throw new InternalServerErrorException(
+        'Failed to save milestone',
+        error.message
+      );
     }
   }
 
-  async saveMemory(id: string, memory: RecordEntity): Promise<BabyJourneyDocument> {
+  async saveMemory(
+    id: string,
+    memory: RecordEntity
+  ): Promise<BabyJourneyDocument> {
     try {
-      const user = await this.babyJourneyModel.findByIdAndUpdate(
-        id,
-        { $push: { memories: memory } },
-        { new: true }
-      )
+      const user = await this.babyJourneyModel
+        .findByIdAndUpdate(id, { $push: { memories: memory } }, { new: true })
         .select('-password')
         .exec();
       if (!user) {
@@ -79,22 +107,29 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
       }
       return user;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to save memory', error.message);
+      throw new InternalServerErrorException(
+        'Failed to save memory',
+        error.message
+      );
     }
   }
 
-  async deleteMilestone(id: string, milestoneId: string): Promise<BabyJourneyDocument> {
+  async deleteMilestone(
+    id: string,
+    milestoneId: string
+  ): Promise<BabyJourneyDocument> {
     try {
       const user = await this.babyJourneyModel.findById(id).exec();
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
-      const userUpdated = await this.babyJourneyModel.findByIdAndUpdate(
-        id,
-        { $pull: { milestones: { _id: milestoneId } } },
-        { new: true }
-      )
+      const userUpdated = await this.babyJourneyModel
+        .findByIdAndUpdate(
+          id,
+          { $pull: { milestones: { _id: milestoneId } } },
+          { new: true }
+        )
         .select('-password')
         .exec();
 
@@ -102,41 +137,58 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
         throw new NotFoundException('Milestone not found');
       }
       return userUpdated;
-
     } catch (error) {
-      throw new InternalServerErrorException('Failed to delete milestone', error.message);
+      throw new InternalServerErrorException(
+        'Failed to delete milestone',
+        error.message
+      );
     }
   }
 
-  async deleteMemory(id: string, memoryId: string): Promise<BabyJourneyDocument> {
+  async deleteMemory(
+    id: string,
+    memoryId: string
+  ): Promise<BabyJourneyDocument> {
     try {
-      return await this.babyJourneyModel.findByIdAndUpdate(
-        id,
-        { $pull: { memories: { _id: memoryId } } },
-        { new: true }
-      )
+      return await this.babyJourneyModel
+        .findByIdAndUpdate(
+          id,
+          { $pull: { memories: { _id: memoryId } } },
+          { new: true }
+        )
         .select('-password')
         .exec();
     } catch (error) {
-      throw new InternalServerErrorException('Failed to delete memory', error.message);
+      throw new InternalServerErrorException(
+        'Failed to delete memory',
+        error.message
+      );
     }
   }
 
-  async findMilestoneById(id: string, milestoneId: string): Promise<RecordEntity> {
+  async findMilestoneById(
+    id: string,
+    milestoneId: string
+  ): Promise<RecordEntity> {
     try {
       const user = await this.babyJourneyModel.findById(id).exec();
       if (!user) {
         throw new NotFoundException('User not found');
       }
 
-      const milestone = user.milestones.find(milestone => milestone._id.toString() === milestoneId);
+      const milestone = user.milestones.find(
+        (milestone) => milestone._id.toString() === milestoneId
+      );
       if (!milestone) {
         throw new NotFoundException('Milestone not found');
       }
 
       return milestone;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to find milestone', error.message);
+      throw new InternalServerErrorException(
+        'Failed to find milestone',
+        error.message
+      );
     }
   }
 
@@ -147,14 +199,19 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
         throw new NotFoundException('User not found');
       }
 
-      const memory = user.memories.find(memory => memory._id.toString() === memoryId);
+      const memory = user.memories.find(
+        (memory) => memory._id.toString() === memoryId
+      );
       if (!memory) {
         throw new NotFoundException('Memory not found');
       }
 
       return memory;
     } catch (error) {
-      throw new InternalServerErrorException('Failed to find memory', error.message);
+      throw new InternalServerErrorException(
+        'Failed to find memory',
+        error.message
+      );
     }
   }
 }

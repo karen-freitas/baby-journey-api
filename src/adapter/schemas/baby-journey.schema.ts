@@ -15,7 +15,6 @@ const RecordSchema = new mongoose.Schema<Record>({
   image: { type: String, required: true },
 });
 
-
 export interface BabyJourneyDocument extends mongoose.Document {
   name: string;
   email: string;

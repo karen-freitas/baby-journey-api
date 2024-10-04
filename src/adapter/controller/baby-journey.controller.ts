@@ -19,7 +19,7 @@ import { BabyJourneyDocument } from '../schemas/baby-journey.schema';
 @UseGuards(AuthGuard)
 @Controller()
 export class AppController {
-  constructor(private readonly babyJourneyService: BabyJourneyService) { }
+  constructor(private readonly babyJourneyService: BabyJourneyService) {}
 
   @Post('/milestone')
   @UseInterceptors(FileInterceptor('file'))
@@ -62,13 +62,18 @@ export class AppController {
   }
 
   @Delete('/milestone/:milestoneId')
-  public async deleteMilestone(@Query('user') userId: string, @Param('milestoneId') id: string): Promise<BabyJourneyDocument> {
+  public async deleteMilestone(
+    @Query('user') userId: string,
+    @Param('milestoneId') id: string
+  ): Promise<BabyJourneyDocument> {
     return this.babyJourneyService.deleteMilestone(userId, id);
   }
 
   @Delete('/memory/:memoryId')
-  public async deleteMemory(@Query('user') userId: string, @Param('memoryId') id: string): Promise<BabyJourneyDocument> {
+  public async deleteMemory(
+    @Query('user') userId: string,
+    @Param('memoryId') id: string
+  ): Promise<BabyJourneyDocument> {
     return this.babyJourneyService.deleteMemory(userId, id);
   }
-
 }

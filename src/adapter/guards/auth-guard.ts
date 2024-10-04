@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
   private jwtSecret: string;
   constructor(
     private readonly jwtService: JwtService,
-    private readonly configService: ConfigService,
+    private readonly configService: ConfigService
   ) {
     this.jwtSecret = this.configService.get<string>('JWT_SECRET');
   }
