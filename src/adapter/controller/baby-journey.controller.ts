@@ -1,29 +1,74 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
-import { AppService } from '../../app.service';
-import { MilestoneDTO } from '../dto/milestone.dto';
-import { MilestoneEntity } from 'src/domain/entity/milestone';
-import { plainToClass } from 'class-transformer';
+import { Delete, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpStatus,
+  ParseFilePipeBuilder,
+  Post,
+  Query,
+  UploadedFile,
+  UseGuards,
+  UseInterceptors,
+} from '@nestjs/common';
+import { mapToRecordEntity, SaveRecordDTO } from '../dto/save-record';
+import { AuthGuard } from '../guards/auth-guard';
+import { BabyJourneyService } from '../../domain/service/baby-journey.service';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { BabyJourneyDocument } from '../schemas/baby-journey.schema';
 
+@UseGuards(AuthGuard)
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly babyJourneyService: BabyJourneyService) { }
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Post('/milestone')
+  @UseInterceptors(FileInterceptor('file'))
+  public async postMilestone(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /(jpg|jpeg|png|gif)$/,
+        })
+        .addMaxSizeValidator({ maxSize: 3000000 })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        })
+    )
+    file: Express.Multer.File,
+    @Body() body: SaveRecordDTO
+  ): Promise<BabyJourneyDocument> {
+    const entity = mapToRecordEntity(body);
+    return this.babyJourneyService.saveMilestone(body.userId, entity, file);
   }
 
-  @Post("/milestone")
-  public async postMilestone(@Body() body: MilestoneDTO): Promise<MilestoneEntity> {
-    const entity = plainToClass(MilestoneEntity, body);
-    return entity;
+  @Post('/memory')
+  @UseInterceptors(FileInterceptor('file'))
+  public async postMemory(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({
+          fileType: /(jpg|jpeg|png|gif)$/,
+        })
+        .addMaxSizeValidator({ maxSize: 3000000 })
+        .build({
+          errorHttpStatusCode: HttpStatus.UNPROCESSABLE_ENTITY,
+        })
+    )
+    file: Express.Multer.File,
+    @Body() body: SaveRecordDTO
+  ): Promise<BabyJourneyDocument> {
+    const entity = mapToRecordEntity(body);
+    return this.babyJourneyService.saveMemory(body.userId, entity, file);
   }
 
-  @Post("/memory")
-  public async postMemory(@Body() body: MilestoneDTO): Promise<MilestoneEntity> {
-    const entity = plainToClass(MilestoneEntity, body);
-    return entity;
+  @Delete('/milestone/:milestoneId')
+  public async deleteMilestone(@Query('user') userId: string, @Param('milestoneId') id: string): Promise<BabyJourneyDocument> {
+    return this.babyJourneyService.deleteMilestone(userId, id);
   }
 
+  @Delete('/memory/:memoryId')
+  public async deleteMemory(@Query('user') userId: string, @Param('memoryId') id: string): Promise<BabyJourneyDocument> {
+    return this.babyJourneyService.deleteMemory(userId, id);
+  }
 
 }

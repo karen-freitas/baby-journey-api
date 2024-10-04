@@ -1,29 +1,19 @@
-import {
-  Body,
-  Controller,
-  Get,
-  HttpCode,
-  HttpStatus,
-  Post,
-  Request,
-} from '@nestjs/common';
 
-// import { Public } from './decorators/public.decorator';
-import { AuthService } from 'src/domain/service/auth.service';
+import { AuthService } from '../../domain/service/auth.service';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import { AuthResponseModel } from '../../domain/model/auth-response.model';
+
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) { }
+  constructor(private readonly authService: AuthService) { }
 
-  // @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.username, signInDto.password);
-  }
-
-  @Get('profile')
-  getProfile(@Request() req) {
-    return req.user;
+  async signIn(
+    @Body('email') email: string,
+    @Body('password') password: string,
+  ): Promise<AuthResponseModel> {
+    return this.authService.signIn(email, password);
   }
 }
