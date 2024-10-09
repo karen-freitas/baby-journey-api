@@ -4,14 +4,14 @@ import mongoose from 'mongoose';
 interface Record extends Document {
   title: string;
   description: string;
-  date: Date;
+  date: string;
   image: string;
 }
 
 const RecordSchema = new mongoose.Schema<Record>({
   title: { type: String, required: true },
   description: { type: String, required: false },
-  date: { type: Date, required: true },
+  date: { type: String, required: true },
   image: { type: String, required: true },
 });
 

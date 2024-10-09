@@ -1,5 +1,4 @@
-import { IsString, IsNotEmpty, IsDate } from 'class-validator';
-import { Type } from 'class-transformer';
+import { IsString, IsNotEmpty, IsDate, Matches } from 'class-validator';
 import { RecordEntity } from '../../domain/entity/record';
 
 export class SaveRecordDTO {
@@ -15,10 +14,10 @@ export class SaveRecordDTO {
   @IsNotEmpty()
   description: string;
 
-  @IsDate()
-  @Type(() => Date)
+  @IsString()
   @IsNotEmpty()
-  date: Date;
+  @Matches(/^\d{2}\/\d{2}\/\d{4}$/, { message: 'Date must be in the format DD/MM/YYYY' })
+  date: string;
 }
 
 export function mapToRecordEntity(dto: SaveRecordDTO): RecordEntity {

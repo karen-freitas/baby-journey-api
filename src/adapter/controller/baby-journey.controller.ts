@@ -1,4 +1,4 @@
-import { Delete, Param } from '@nestjs/common';
+import { Delete, Param, UsePipes } from '@nestjs/common';
 import {
   Body,
   Controller,
@@ -15,13 +15,15 @@ import { AuthGuard } from '../guards/auth-guard';
 import { BabyJourneyService } from '../../domain/service/baby-journey.service';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { BabyJourneyDocument } from '../schemas/baby-journey.schema';
+import { ValidationPipe } from '../pipe/validation-pipe';
 
 @UseGuards(AuthGuard)
 @Controller()
 export class AppController {
-  constructor(private readonly babyJourneyService: BabyJourneyService) {}
+  constructor(private readonly babyJourneyService: BabyJourneyService) { }
 
   @Post('/milestone')
+  @UsePipes(new ValidationPipe())
   @UseInterceptors(FileInterceptor('file'))
   public async postMilestone(
     @UploadedFile(
@@ -42,6 +44,7 @@ export class AppController {
   }
 
   @Post('/memory')
+  @UsePipes(new ValidationPipe())
   @UseInterceptors(FileInterceptor('file'))
   public async postMemory(
     @UploadedFile(

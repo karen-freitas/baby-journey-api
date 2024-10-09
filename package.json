@@ -76,7 +76,7 @@
     "collectCoverageFrom": [
       "**/*.(ts|js)"
     ],
-    "coverageDirectory": "<rootDir>/coverage",
+    "coverageDirectory": "../coverage",
     "testEnvironment": "node"
   }
 }

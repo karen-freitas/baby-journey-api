@@ -21,7 +21,6 @@ export class AzureBlobService implements AzureBlobServiceInterface {
       const blobClient = containerClient.getBlockBlobClient(imageName);
       return blobClient;
     } catch (error) {
-      console.error('Error getting BlobClient:', error);
       throw new Error('Failed to get BlobClient');
     }
   }
@@ -35,7 +34,6 @@ export class AzureBlobService implements AzureBlobServiceInterface {
       await blobClient.uploadData(file.buffer);
       return fileName;
     } catch (error) {
-      console.error('Error uploading file:', error);
       throw new Error('Failed to upload file');
     }
   }
@@ -47,7 +45,6 @@ export class AzureBlobService implements AzureBlobServiceInterface {
       const blobClient = this.getBlobClient(filename);
       await blobClient.deleteIfExists();
     } catch (error) {
-      console.error('Error deleting file:', error);
       throw new Error('Failed to delete file');
     }
   }
