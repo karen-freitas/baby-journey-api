@@ -19,8 +19,7 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
 
   async createUser(user: UserEntity): Promise<BabyJourneyDocument> {
     try {
-      const createdUser = new this.babyJourneyModel(user);
-      return await createdUser.save();
+      return await this.babyJourneyModel.create(user);
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to create user',
@@ -150,7 +149,12 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
     memoryId: string
   ): Promise<BabyJourneyDocument> {
     try {
-      return await this.babyJourneyModel
+      const user = await this.babyJourneyModel.findById(id).exec();
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const userUpdated = await this.babyJourneyModel
         .findByIdAndUpdate(
           id,
           { $pull: { memories: { _id: memoryId } } },
@@ -158,6 +162,12 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
         )
         .select('-password')
         .exec();
+
+      if (!userUpdated) {
+        throw new NotFoundException('Milestone not found');
+      }
+      return userUpdated;
+
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to delete memory',

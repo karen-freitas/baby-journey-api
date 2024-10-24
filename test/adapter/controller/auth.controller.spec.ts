@@ -2,11 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { INestApplication } from '@nestjs/common';
-import { AuthService } from '../../src/domain/service/auth.service';
-import { AuthController } from '../../src/adapter/controller/auth.controller';
+import { AuthService } from '../../../src/domain/service/auth.service';
+import { AuthController } from '../../../src/adapter/controller/auth.controller';
 
 describe('AuthController', () => {
   let app: INestApplication;
+  let authController: AuthController;
   let authService: AuthService;
 
   beforeAll(async () => {
@@ -52,6 +53,7 @@ describe('AuthController', () => {
 
     expect(authService.signIn).toHaveBeenCalledWith(email, password);
   });
+
 
   afterAll(async () => {
     await app.close();

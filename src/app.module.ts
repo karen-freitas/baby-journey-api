@@ -13,19 +13,19 @@ import { BabyJourneyService } from './domain/service/baby-journey.service';
 import { BabyJourneyRepositoryInterface } from './domain/interface/baby-journey.repository';
 import { AzureBlobService } from './adapter/service-client/azure-blob.service';
 import { AzureBlobServiceInterface } from './domain/interface/azure-blob.service';
-import { EnvironmentConfig, environmentConfig } from './configs/environment.config';
+import { EnvironmentConfig } from './configs/environment.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(environmentConfig.mongoUri),
+    MongooseModule.forRoot(process.env.MONGO_URI),
     MongooseModule.forFeature([
       { name: 'BabyJourney', schema: BabyJourneySchema },
     ]),
     JwtModule.register({
       global: true,
-      secret: environmentConfig.jwtSecret,
-      signOptions: { expiresIn: environmentConfig.jwtExpirationTime },
+      secret: process.env.JWT_SECRET_KEY,
+      signOptions: { expiresIn: process.env.JWT_EXPIRATION_TIME },
     }),
   ],
   controllers: [AppController, AuthController, UserController],
