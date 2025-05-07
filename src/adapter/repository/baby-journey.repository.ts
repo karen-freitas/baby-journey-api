@@ -5,17 +5,18 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { BabyJourneyDocument } from '../schemas/baby-journey.schema';
+
 import { UserEntity } from '../../domain/entity/user';
 import { BabyJourneyRepositoryInterface } from '../../domain/interface/baby-journey.repository';
 import { RecordEntity } from '../../domain/entity/record';
+import { BabyJourneyDocument } from 'src/domain/model/baby-journey.model';
 
 @Injectable()
 export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
   constructor(
     @InjectModel('BabyJourney')
     private babyJourneyModel: Model<BabyJourneyDocument>
-  ) { }
+  ) {}
 
   async createUser(user: UserEntity): Promise<BabyJourneyDocument> {
     try {
@@ -43,7 +44,10 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
 
   async findUserById(id: string): Promise<BabyJourneyDocument> {
     try {
-      const user = await this.babyJourneyModel.findById(id).exec();
+      const user = await this.babyJourneyModel
+        .findById(id)
+        .select('-password')
+        .exec();
       if (!user) {
         throw new NotFoundException('User not found');
       }
@@ -167,7 +171,6 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
         throw new NotFoundException('Milestone not found');
       }
       return userUpdated;
-
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to delete memory',
@@ -220,6 +223,67 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to find memory',
+        error.message
+      );
+    }
+  }
+
+  async updateMilestone(
+    id: string,
+    milestoneId: string,
+    milestone: RecordEntity
+  ): Promise<BabyJourneyDocument> {
+    try {
+      const user = await this.babyJourneyModel.findById(id).exec();
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const updatedUser = await this.babyJourneyModel
+        .findOneAndUpdate(
+          { _id: id, 'milestones._id': milestoneId },
+          { $set: { 'milestones.$': milestone } }
+        )
+        .select('-password')
+        .exec();
+
+      if (!updatedUser) {
+        throw new NotFoundException('Milestone not found');
+      }
+      return updatedUser;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to update milestone',
+        error.message
+      );
+    }
+  }
+  async updateMemory(
+    id: string,
+    memoryId: string,
+    memory: RecordEntity
+  ): Promise<BabyJourneyDocument> {
+    try {
+      const user = await this.babyJourneyModel.findById(id).exec();
+      if (!user) {
+        throw new NotFoundException('User not found');
+      }
+
+      const updatedUser = await this.babyJourneyModel
+        .findOneAndUpdate(
+          { _id: id, 'memories._id': memoryId },
+          { $set: { 'memories.$': memory } }
+        )
+        .select('-password')
+        .exec();
+
+      if (!updatedUser) {
+        throw new NotFoundException('Memory not found');
+      }
+      return updatedUser;
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to update memory',
         error.message
       );
     }

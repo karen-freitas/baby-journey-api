@@ -1,6 +1,6 @@
-import { BabyJourneyDocument } from '../../adapter/schemas/baby-journey.schema';
 import { UserEntity } from '../entity/user';
 import { RecordEntity } from '../entity/record';
+import { BabyJourneyDocument } from '../model/baby-journey.model';
 
 export interface BabyJourneyRepositoryInterface {
   createUser(user: UserEntity): Promise<BabyJourneyDocument>;
@@ -19,6 +19,16 @@ export interface BabyJourneyRepositoryInterface {
   deleteMemory(id: string, memoryId: string): Promise<BabyJourneyDocument>;
   findMilestoneById(id: string, milestoneId: string): Promise<RecordEntity>;
   findMemoryById(id: string, memoryId: string): Promise<RecordEntity>;
+  updateMilestone(
+    id: string,
+    milestoneId: string,
+    milestone: RecordEntity
+  ): Promise<BabyJourneyDocument>;
+  updateMemory(
+    id: string,
+    memoryId: string,
+    memory: RecordEntity
+  ): Promise<BabyJourneyDocument>;
 }
 
 export const BabyJourneyRepositoryInterface = Symbol(

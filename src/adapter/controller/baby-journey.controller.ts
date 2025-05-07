@@ -1,4 +1,4 @@
-import { Delete, Param, UsePipes } from '@nestjs/common';
+import { Delete, Get, Param, Put, UsePipes } from '@nestjs/common';
 import {
   Body,
   Controller,
@@ -14,13 +14,14 @@ import { mapToRecordEntity, SaveRecordDTO } from '../dto/save-record';
 import { AuthGuard } from '../guards/auth-guard';
 import { BabyJourneyService } from '../../domain/service/baby-journey.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { BabyJourneyDocument } from '../schemas/baby-journey.schema';
+
 import { ValidationPipe } from '../pipe/validation-pipe';
+import { BabyJourneyDocument } from 'src/domain/model/baby-journey.model';
 
 @UseGuards(AuthGuard)
 @Controller()
 export class AppController {
-  constructor(private readonly babyJourneyService: BabyJourneyService) { }
+  constructor(private readonly babyJourneyService: BabyJourneyService) {}
 
   @Post('/milestone')
   @UsePipes(new ValidationPipe())
@@ -78,5 +79,36 @@ export class AppController {
     @Param('memoryId') id: string
   ): Promise<BabyJourneyDocument> {
     return this.babyJourneyService.deleteMemory(userId, id);
+  }
+
+  @Get('file')
+  public async downloadFile(
+    @Body('filename') filename: string
+  ): Promise<string> {
+    return this.babyJourneyService.downloadFile(filename);
+  }
+
+  @Put('/milestone/:milestoneId')
+  @UsePipes(new ValidationPipe())
+  async updateMilestone(
+    @Param('milestoneId') milestoneId: string,
+    @Body() body: SaveRecordDTO
+  ): Promise<BabyJourneyDocument> {
+    const entity = mapToRecordEntity(body);
+    return this.babyJourneyService.updateMilestone(
+      body.userId,
+      milestoneId,
+      entity
+    );
+  }
+
+  @Put('/memory/:memoryId')
+  @UsePipes(new ValidationPipe())
+  async updateMemory(
+    @Param('memoryId') memoryId: string,
+    @Body() body: SaveRecordDTO
+  ): Promise<BabyJourneyDocument> {
+    const entity = mapToRecordEntity(body);
+    return this.babyJourneyService.updateMemory(body.userId, memoryId, entity);
   }
 }

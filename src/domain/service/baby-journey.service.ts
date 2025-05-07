@@ -2,8 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 
 import { RecordEntity } from '../entity/record';
 import { BabyJourneyRepositoryInterface } from '../interface/baby-journey.repository';
-import { BabyJourneyDocument } from '../../adapter/schemas/baby-journey.schema';
 import { AzureBlobServiceInterface } from '../interface/azure-blob.service';
+import { BabyJourneyDocument } from '../model/baby-journey.model';
 
 @Injectable()
 export class BabyJourneyService {
@@ -12,7 +12,7 @@ export class BabyJourneyService {
     private readonly babyJourneyRepository: BabyJourneyRepositoryInterface,
     @Inject(AzureBlobServiceInterface)
     private readonly blobService: AzureBlobServiceInterface
-  ) { }
+  ) {}
 
   async saveMilestone(
     id: string,
@@ -67,6 +67,42 @@ export class BabyJourneyService {
     const updatedUser = await this.babyJourneyRepository.deleteMemory(
       id,
       memoryId
+    );
+    return updatedUser;
+  }
+
+  async downloadFile(filename: string): Promise<string> {
+    try {
+      const fileBuffer = await this.blobService.downloadFile(filename);
+      const base64Image = fileBuffer.toString('base64');
+      return `data:image/jpeg;base64,${base64Image}`;
+    } catch {
+      throw new Error('Failed to download and convert file to image');
+    }
+  }
+
+  async updateMilestone(
+    id: string,
+    milestoneId: string,
+    milestone: RecordEntity
+  ): Promise<BabyJourneyDocument> {
+    const updatedUser = await this.babyJourneyRepository.updateMilestone(
+      id,
+      milestoneId,
+      milestone
+    );
+    return updatedUser;
+  }
+
+  async updateMemory(
+    id: string,
+    memoryId: string,
+    memory: RecordEntity
+  ): Promise<BabyJourneyDocument> {
+    const updatedUser = await this.babyJourneyRepository.updateMemory(
+      id,
+      memoryId,
+      memory
     );
     return updatedUser;
   }

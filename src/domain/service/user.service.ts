@@ -4,6 +4,8 @@ import { UserEntity } from '../entity/user';
 import { BabyJourneyRepositoryInterface } from '../interface/baby-journey.repository';
 import { AzureBlobServiceInterface } from '../interface/azure-blob.service';
 import { UserModel } from '../model/user.model';
+import { UserAlreadyRegisteredException } from '../exception/user-already-registered.exception';
+import { BabyJourneyDocument } from '../model/baby-journey.model';
 
 @Injectable()
 export class UsersService {
@@ -12,13 +14,13 @@ export class UsersService {
     private readonly babyJourneyRepository: BabyJourneyRepositoryInterface,
     @Inject(AzureBlobServiceInterface)
     private readonly blobService: AzureBlobServiceInterface
-  ) { }
+  ) {}
 
   async create(newUser: UserEntity): Promise<UserModel> {
     const userAlreadyRegistered = await this.findOne(newUser.email);
 
     if (userAlreadyRegistered) {
-      throw new Error(`User '${newUser.email}' already registered`);
+      throw new UserAlreadyRegisteredException(newUser.email);
     }
     const passwordHash = bcryptHashSync(newUser.password, 10);
     const dbUser = { ...newUser, password: passwordHash };
@@ -40,6 +42,16 @@ export class UsersService {
       name: userFound.name,
       password: userFound.password,
     } as UserModel;
+  }
+
+  async findById(id: string): Promise<BabyJourneyDocument> {
+    const userFound = await this.babyJourneyRepository.findUserById(id);
+
+    if (!userFound) {
+      return null;
+    }
+
+    return userFound;
   }
 
   async delete(id: string): Promise<void> {

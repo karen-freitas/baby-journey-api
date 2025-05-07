@@ -1,4 +1,4 @@
-import { RecordEntity } from '../../domain/entity/record';
+import { BabyJourneyDocument } from 'src/domain/model/baby-journey.model';
 import mongoose from 'mongoose';
 
 interface Record extends Document {
@@ -14,15 +14,6 @@ const RecordSchema = new mongoose.Schema<Record>({
   date: { type: String, required: true },
   image: { type: String, required: true },
 });
-
-export interface BabyJourneyDocument extends mongoose.Document {
-  name: string;
-  email: string;
-  password: string;
-  milestones: RecordEntity[];
-  memories: RecordEntity[];
-  createdAt: Date;
-}
 
 export const BabyJourneySchema = new mongoose.Schema<BabyJourneyDocument>({
   name: { type: String, required: true },
