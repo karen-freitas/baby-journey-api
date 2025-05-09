@@ -16,6 +16,9 @@ jest.mock('@azure/storage-blob', () => ({
   },
   BlockBlobClient: jest.fn(),
 }));
+afterEach(() => {
+  jest.restoreAllMocks();
+});
 
 describe('AzureBlobService', () => {
   let service: AzureBlobService;

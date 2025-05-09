@@ -23,7 +23,7 @@ export class SaveRecordDTO {
 
   @IsString()
   @IsOptional()
-  image: string;
+  image?: string;
 }
 
 export function mapToRecordEntity(dto: SaveRecordDTO): RecordEntity {

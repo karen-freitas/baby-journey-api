@@ -3,6 +3,8 @@ import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { AzureBlobServiceInterface } from '../../domain/interface/azure-blob.service';
 import { v4 } from 'uuid';
 import { EnvironmentConfig } from '../../configs/environment.config';
+import { Readable } from 'stream';
+import * as fs from 'fs';
 
 @Injectable()
 export class AzureBlobService implements AzureBlobServiceInterface {
@@ -30,7 +32,8 @@ export class AzureBlobService implements AzureBlobServiceInterface {
     try {
       const fileName = v4() + file.originalname;
       const blobClient = this.getBlobClient(fileName);
-      await blobClient.uploadData(file.buffer);
+      const stream = Readable.from(file.buffer);
+      await blobClient.uploadStream(stream);
       return fileName;
     } catch (error) {
       throw new InternalServerErrorException(
@@ -60,6 +63,20 @@ export class AzureBlobService implements AzureBlobServiceInterface {
     } catch (error) {
       throw new InternalServerErrorException(
         'Failed to download file from Azure Blob Storage',
+        error.message
+      );
+    }
+  }
+
+  public async downloadFileToPath(filename: string, path: string): Promise<void> {
+    try {
+      const blobClient = this.getBlobClient(filename);
+      const writableStream = fs.createWriteStream(path);
+      const downloadResponse = await blobClient.download(0);
+      downloadResponse.readableStreamBody?.pipe(writableStream);
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Failed to download file to path from Azure Blob Storage',
         error.message
       );
     }

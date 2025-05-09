@@ -31,6 +31,10 @@ describe('AuthController', () => {
     authService = moduleRef.get<AuthService>(AuthService);
   });
 
+  afterEach(() => {
+  jest.restoreAllMocks();
+});
+
   it('should return an access token on successful login', async () => {
     const response = await request(app.getHttpServer())
       .post('/auth/login')

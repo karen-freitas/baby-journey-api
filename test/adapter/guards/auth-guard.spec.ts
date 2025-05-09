@@ -15,6 +15,10 @@ describe('AuthGuard', () => {
     authGuard = new AuthGuard(jwtService, configService);
   });
 
+  afterEach(() => {
+  jest.restoreAllMocks();
+});
+
   describe('canActivate', () => {
     it('should return true if token is valid', async () => {
       const mockRequest = {

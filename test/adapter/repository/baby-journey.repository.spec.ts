@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getModelToken } from '@nestjs/mongoose';
 import { BabyJourneyRepository } from '../../../src/adapter/repository/baby-journey.repository';
-import { BabyJourneyDocument } from '../../../src/adapter/schemas/baby-journey.schema';
 import { UserEntity } from '../../../src/domain/entity/user';
 import { RecordEntity } from '../../../src/domain/entity/record';
 import { InternalServerErrorException } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { BabyJourneyDocument } from 'src/domain/model/baby-journey.model';
 
 describe('BabyJourneyRepository', () => {
   let repository: BabyJourneyRepository;
@@ -53,6 +53,10 @@ describe('BabyJourneyRepository', () => {
 
     repository = module.get<BabyJourneyRepository>(BabyJourneyRepository);
   });
+
+  afterEach(() => {
+  jest.restoreAllMocks();
+});
 
   it('should be defined', () => {
     expect(repository).toBeDefined();

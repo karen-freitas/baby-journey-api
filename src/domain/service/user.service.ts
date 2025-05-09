@@ -59,12 +59,8 @@ export class UsersService {
     if (!user) {
       throw new Error(`User with id '${id}' not found`);
     }
-    user.milestones.forEach(async (milestone) => {
-      await this.blobService.deleteFile(milestone.image);
-    });
-    user.memories.forEach(async (memory) => {
-      await this.blobService.deleteFile(memory.image);
-    });
+    await Promise.all(user.milestones.map((milestone) => this.blobService.deleteFile(milestone.image)));
+    await Promise.all(user.memories.map((memory) => this.blobService.deleteFile(memory.image)));
 
     return this.babyJourneyRepository.deleteUser(id);
   }

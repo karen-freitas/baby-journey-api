@@ -41,6 +41,7 @@ describe('AppController', () => {
 
   afterEach(async () => {
     await app.close();
+    jest.restoreAllMocks();
   });
 
   it('should save a milestone', async () => {

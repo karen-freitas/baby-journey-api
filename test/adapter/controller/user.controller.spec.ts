@@ -32,6 +32,10 @@ describe.only('UserController', () => {
     usersService = module.get<UsersService>(UsersService);
   });
 
+  afterEach(() => {
+  jest.restoreAllMocks();
+});
+
   describe('createUser', () => {
     it('should create a user', async () => {
       const createUserDto: CreateUserDto = { name: 'John Doe', email: 'john@example.com', password: 'password' };
