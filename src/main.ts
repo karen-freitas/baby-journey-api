@@ -11,6 +11,7 @@ async function bootstrap() {
   origin: process.env.URI_FRONTEND,
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true,
+  allowedHeaders: ['Content-Type', 'Authorization'],
 });
 
   // Swagger Configuration
