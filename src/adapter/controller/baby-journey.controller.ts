@@ -83,7 +83,7 @@ export class AppController {
 
   @Get('file')
   public async downloadFile(
-    @Body('filename') filename: string
+    @Query('filename') filename: string
   ): Promise<string> {
     return this.babyJourneyService.downloadFile(filename);
   }

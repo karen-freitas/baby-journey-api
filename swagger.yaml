@@ -1,0 +1,246 @@
+openapi: 3.0.0
+paths:
+  /milestone:
+    post:
+      operationId: AppController_postMilestone
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveRecordDTO'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_0
+        - App
+  /memory:
+    post:
+      operationId: AppController_postMemory
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveRecordDTO'
+      responses:
+        '201':
+          description: ''
+      tags: *ref_0
+  /milestone/{milestoneId}:
+    delete:
+      operationId: AppController_deleteMilestone
+      parameters:
+        - name: user
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: milestoneId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
+    put:
+      operationId: AppController_updateMilestone
+      parameters:
+        - name: milestoneId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveRecordDTO'
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
+  /memory/{memoryId}:
+    delete:
+      operationId: AppController_deleteMemory
+      parameters:
+        - name: user
+          required: true
+          in: query
+          schema:
+            type: string
+        - name: memoryId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
+    put:
+      operationId: AppController_updateMemory
+      parameters:
+        - name: memoryId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SaveRecordDTO'
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
+  /file:
+    get:
+      operationId: AppController_downloadFile
+      parameters:
+        - name: filename
+          required: true
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_0
+  /auth/login:
+    post:
+      operationId: AuthController_signIn
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginDTO'
+      responses:
+        '200':
+          description: ''
+      tags:
+        - Auth
+  /users:
+    post:
+      operationId: UserController_createUser
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserDto'
+      responses:
+        '201':
+          description: ''
+      tags: &ref_1
+        - User
+  /users/{id}:
+    delete:
+      operationId: UserController_deleteUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
+    get:
+      operationId: UserController_getUser
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+      tags: *ref_1
+info:
+  title: Baby Journey API
+  description: API documentation for Baby Journey project
+  version: '1.0'
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    bearer:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+  schemas:
+    SaveRecordDTO:
+      type: object
+      properties:
+        userId:
+          type: string
+          example: userId123
+          description: ID do usuário
+        title:
+          type: string
+          example: Primeiro Passo
+          description: Título do registro
+        description:
+          type: string
+          example: Primeiro passo do bebê
+          description: Descrição do registro
+        date:
+          type: string
+          example: 01/01/2025
+          description: Data do registro no formato DD/MM/YYYY
+        image:
+          type: string
+          example: imagem.jpg
+          description: Nome do arquivo da imagem (opcional)
+      required:
+        - userId
+        - title
+        - description
+        - date
+    LoginDTO:
+      type: object
+      properties:
+        email:
+          type: string
+          example: usuario@email.com
+          description: E-mail do usuário
+        password:
+          type: string
+          example: senha123
+          description: Senha do usuário
+      required:
+        - email
+        - password
+    CreateUserDto:
+      type: object
+      properties:
+        name:
+          type: string
+          example: Maria Silva
+          description: Nome do usuário
+        email:
+          type: string
+          example: maria@email.com
+          description: E-mail do usuário
+        password:
+          type: string
+          example: senha123
+          description: Senha do usuário (mínimo 6 caracteres)
+      required:
+        - name
+        - email
+        - password

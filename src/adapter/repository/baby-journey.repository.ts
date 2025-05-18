@@ -231,7 +231,7 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
   async updateMilestone(
     id: string,
     milestoneId: string,
-    milestone: RecordEntity
+    milestone: Partial<RecordEntity>
   ): Promise<BabyJourneyDocument> {
     try {
       const user = await this.babyJourneyModel.findById(id).exec();
@@ -242,7 +242,14 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
       const updatedUser = await this.babyJourneyModel
         .findOneAndUpdate(
           { _id: id, 'milestones._id': milestoneId },
-          { $set: { 'milestones.$': milestone } }
+          {
+            $set: {
+              'milestones.$.title': milestone.title,
+              'milestones.$.description': milestone.description,
+              'milestones.$.date': milestone.date,
+            },
+          },
+          { new: true }
         )
         .select('-password')
         .exec();
@@ -272,7 +279,13 @@ export class BabyJourneyRepository implements BabyJourneyRepositoryInterface {
       const updatedUser = await this.babyJourneyModel
         .findOneAndUpdate(
           { _id: id, 'memories._id': memoryId },
-          { $set: { 'memories.$': memory } }
+          {
+            $set: {
+              'memories.$.title': memory.title,
+              'memories.$.description': memory.description,
+              'memories.$.date': memory.date,
+            },
+          },
         )
         .select('-password')
         .exec();

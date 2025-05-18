@@ -15,7 +15,7 @@ export class SaveRecordDTO {
 
   @ApiProperty({ example: 'Primeiro passo do bebê', description: 'Descrição do registro' })
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   description: string;
 
   @ApiProperty({ example: '01/01/2025', description: 'Data do registro no formato DD/MM/YYYY' })
