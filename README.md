@@ -1,7 +1,7 @@
 # Baby Journey API
 
 ## **Descrição**
-A Baby Journey API é uma aplicação backend desenvolvida em **NestJS** para gerenciar marcos e memórias de bebês. Ela permite que os usuários registrem momentos importantes, façam upload de imagens, atualizem e excluam registros. A API é consumida por um frontend desenvolvido em **React**, proporcionando uma interface amigável e intuitiva.
+A Baby Journey API é uma aplicação backend desenvolvida em **NestJS** para gerenciar marcos e memórias de bebês. Ela permite que os usuários registrem momentos importantes, façam upload de imagens, atualizem e excluam registros. A API é consumida por um frontend desenvolvido em **React**, proporcionando uma interface amigável e intuitiva. Este projeto foi criado como parte avaliativa do curso de pós-graduação em Desenvolvimento Full Stack da PUCRS.
 
 ---
 
@@ -23,6 +23,13 @@ A Baby Journey API é uma aplicação backend desenvolvida em **NestJS** para ge
 - **Armazenamento de Imagens**: Azure Blob Storage
 - **Autenticação**: JWT
 - **Documentação**: Swagger
+
+---
+
+## **Publicação**
+- **Frontend**: O frontend está publicado em [https://baby-journey-frontend.vercel.app](https://baby-journey-frontend.vercel.app).
+- **Repositório do Frontend**: O código do frontend está disponível em [https://github.com/karen-freitas/baby-journey-frontend.git](https://github.com/karen-freitas/baby-journey-frontend.git).
+- **Documentação da API**: A documentação da API pode ser acessada em [https://baby-journey-api.onrender.com/api-docs](https://baby-journey-api.onrender.com/api-docs).
 
 ---
 
